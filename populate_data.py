@@ -32,7 +32,7 @@ def bulk_generate(n=20):
     faker = Faker()
     models = []
     for i in range(1, n):
-        researchId = i
+        researchId = i + random.randint(100, 10000)
         author = faker.name()
         publishDate = (faker.date_between(start_date='-20y', end_date='today'))
         status = random.choice(status_choice)

@@ -1,4 +1,4 @@
-# Balastic
+# README.md
 
 A Toy Application for Playing with Elastic Search APIs.
 
@@ -125,3 +125,32 @@ curl --request POST \
   }
 }'
 ```
+
+### Okay, How Elastic is Elastic Search? ( Load Testing)
+
+---
+
+Initially the load testing environment is prepared using `python` and `locust`. All the `locust` file can be found in the `locustfiles` directory. Please feel free to change the settings for your testing. 
+
+Also, we built this so that we can break, and so that we can test, 
+
+1. Breaking points.
+2. Throughputs &
+3. Latency. 
+
+We are not going to go deep into these, we will just add simple load testing scenarios and discuss with our understanding. 
+
+Constant background processes are taken place while new docs are coming at a tremendous pace, while it requires to calculate the indexing, scoring and other stuffs ( like merging or taking snapshots). All these tasks make elastic search `GET` slower by time. The solutions can be using batch request for coping up round trip cost, also introducing scheduler with multiple worker process for insertions. Further more, auto-generation of ids can be make it faster. Also, filesystem cache can be used for caching intermediate results and process the requests further more for future usage. 
+
+### **10 RPS INSERT & 100 RPS GET Scenario**
+
+---
+
+1. In this scenario almost 100 request were sent to GET endpoints randomly generated and 10 request were sent as a bulk insert per second in the single machine. 
+2. Around 5 min for this test result around 3275 request to `-bulk` API and around 19K requests were sent to `/<index_name>/_doc/<doc_id>` for retrieval. 
+
+### Report on Load Testing
+| Requests | Fails | Average(ms) | 90th% | Max(ms) | Median(ms) | Min(ms) | Current Failure/s |
+|----------|-------|-------------|-------|---------|------------|---------|-------------------|
+| 36687    | 11    | 1379        | 2500  | 3918    | 1400       | 1       | 0.1               |
+
