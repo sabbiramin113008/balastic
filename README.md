@@ -6,18 +6,27 @@ A Toy Application for Playing with Elastic Search APIs.
 
 ---
 
-1. Installing and running `elasticsearch server` is beyond this documentation scope. Please follow, [`https://www.elastic.co/`](https://www.elastic.co/) for head start and all the tutorials.
-2. Make sure `venv` or any virtual environment is installed. If not, try, `sudo apt-get install python3-venv` and also, please make sure the pip is upgraded to the latest version. If Not, then try `pip install ---upgrade pip`
-3. If you are using `venv` make sure to activate it via `source venv/bin/activate`.
-4. Make sure to install the exact same version of the modules docked in `requirements.txt`. Type `pip install -r requirements.txt` on terminal and you are ready to go.
+1. Installing and running `elasticsearch server` is beyond this documentation scope. Please
+   follow, [`https://www.elastic.co/`](https://www.elastic.co/) for head start and all the tutorials.
+2. Make sure `venv` or any virtual environment is installed. If not, try, `sudo apt-get install python3-venv` and also,
+   please make sure the pip is upgraded to the latest version. If Not, then try `pip install ---upgrade pip`
+3. If you are using `venv` make sure to activate it via `source venv/bin/activate`.
+4. Make sure to install the exact same version of the modules docked in `requirements.txt`.
+   Type `pip install -r requirements.txt` on terminal and you are ready to go.
 
 ### Work Flow and Summary of the Solution Approach
 
 ---
 
-1. Please run `python populate_data.py` script for the initial `curl` data file creation followed by `json` file generation. 
-2. As tweaking the elastic search over HTTP API is super easy, to answer all the questions, all the `curl` commands are added in the `README.md` file as well as respective `Insomnia_API_collection` can be found in `insomnia_docs` directory. 
-3. For load testing `locust` a load testing framework is added. All the necessary files can be found in `locustfiles` dir. To run the test, please run `locust -f locustfiles/ElasticServerTest.py` to start the test server. This will start an web interface at [http://0.0.0.0:8089](http://0.0.0.0:8089/) (accepting connections from all network interfaces). 
+1. Please run `python populate_data.py` script for the initial `curl` data file creation followed by `json` file
+   generation.
+2. As tweaking the elastic search over HTTP API is super easy, to answer all the questions, all the `curl` commands are
+   added in the `README.md` file as well as respective `Insomnia_API_collection` can be found in `insomnia_docs`
+   directory.
+3. For load testing `locust` a load testing framework is added. All the necessary files can be found in `locustfiles`
+   dir. To run the test, please run `locust -f locustfiles/ElasticServerTest.py` to start the test server. This will
+   start an web interface at [http://0.0.0.0:8089](http://0.0.0.0:8089/) (accepting connections from all network
+   interfaces).
 
 ### 1. Creating the Index
 
@@ -40,7 +49,7 @@ curl --request PUT \
  --data-binary "@bulk_insertion_paper_data.txt"
 ```
 
-The contents of the `bulk_insertion_paper_data.txt` are as follows, 
+The contents of the `bulk_insertion_paper_data.txt` are as follows,
 
 ```
 {"index" : {"_index" : "paper_index", "_id":"1" }\n
@@ -62,9 +71,11 @@ The contents of the `bulk_insertion_paper_data.txt` are as follows,
 
 ---
 
-Let's assume papers with  `Ids=[4, 5, 6]` are `REJECTED` in the examining process and their status should be changed to `REJECTED` . Now we are going to update these docs using `painless`
+Let's assume papers with  `Ids=[4, 5, 6]` are `REJECTED` in the examining process and their status should be changed
+to `REJECTED` . Now we are going to update these docs using `painless`
 
-The logic is we will check if the current status is equal to `SUBMITTED` only then it will change the status to `REJECTED` . 
+The logic is we will check if the current status is equal to `SUBMITTED` only then it will change the status
+to `REJECTED` .
 
 **Single Instance Command**
 
@@ -80,7 +91,7 @@ curl --request POST \
 }'
 ```
 
-**Bulk Update Using Bulk API and `painless`** 
+**Bulk Update Using Bulk API and `painless`**
 
 ```bash
 curl --request POST \
@@ -98,7 +109,7 @@ curl --request POST \
 
 ### 4. Changing `status` from `STRING` to `Int` Value
 
-We will use `painless` script to change `status` field of all the docs with the following command. 
+We will use `painless` script to change `status` field of all the docs with the following command.
 
 ```bash
 curl --request POST \
@@ -130,26 +141,35 @@ curl --request POST \
 
 ---
 
-Initially the load testing environment is prepared using `python` and `locust`. All the `locust` file can be found in the `locustfiles` directory. Please feel free to change the settings for your testing. 
+Initially the load testing environment is prepared using `python` and `locust`. All the `locust` file can be found in
+the `locustfiles` directory. Please feel free to change the settings for your testing.
 
-Also, we built this so that we can break, and so that we can test, 
+Also, we built this so that we can break, and so that we can test,
 
 1. Breaking points.
 2. Throughputs &
-3. Latency. 
+3. Latency.
 
-We are not going to go deep into these, we will just add simple load testing scenarios and discuss with our understanding. 
+We are not going to go deep into these, we will just add simple load testing scenarios and discuss with our
+understanding.
 
-Constant background processes are taken place while new docs are coming at a tremendous pace, while it requires to calculate the indexing, scoring and other stuffs ( like merging or taking snapshots). All these tasks make elastic search `GET` slower by time. The solutions can be using batch request for coping up round trip cost, also introducing scheduler with multiple worker process for insertions. Furthermore, auto-generation of ids can be make it faster. Also, filesystem cache can be used for caching intermediate results and process the requests further more for future usage. 
+Constant background processes are taken place while new docs are coming at a tremendous pace, while it requires to
+calculate the indexing, scoring and other stuffs ( like merging or taking snapshots). All these tasks make elastic
+search `GET` slower by time. The solutions can be using batch request for coping up round trip cost, also introducing
+scheduler with multiple worker process for insertions. Furthermore, auto-generation of ids can make it faster. Also,
+filesystem cache can be used for caching intermediate results and process the requests further more for future usage.
 
 ### **10 RPS INSERT & 100 RPS GET Scenario**
 
 ---
 
-1. In this scenario almost 100 requests were sent to GET endpoints randomly generated and 10 requests were sent as a bulk insert per second in the single machine. 
-2. Around 5 min for this test result around 3275 request to `-bulk` API and around 19K requests were sent to `/<index_name>/_doc/<doc_id>` for retrieval. 
+1. In this scenario almost 100 requests were sent to GET endpoints randomly generated and 10 requests were sent as a
+   bulk insert per second in the single machine.
+2. Around 5 min for this test result around 3275 request to `-bulk` API and around 19K requests were sent
+   to `/<index_name>/_doc/<doc_id>` for retrieval.
 
 ### Report on Load Testing
+
 | Requests | Fails | Average(ms) | 90th% | Max(ms) | Median(ms) | Min(ms) | Current Failure/s |
 |----------|-------|-------------|-------|---------|------------|---------|-------------------|
 | 36687    | 11    | 1379        | 2500  | 3918    | 1400       | 1       | 0.1               |
