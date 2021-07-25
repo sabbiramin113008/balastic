@@ -1,4 +1,4 @@
-# README.md
+# Balastic
 
 A Toy Application for Playing with Elastic Search APIs.
 
@@ -16,7 +16,7 @@ A Toy Application for Playing with Elastic Search APIs.
 ---
 
 1. Please run `python populate_data.py` script for the initial `curl` data file creation followed by `json` file generation. 
-2. As tweaking the elastic search over HTTP API is super easy, to answer all the questions, all the `curl` commands are added in the `[readme.md](http://readme.md)` file as well as respective `Insomnia_API_collection` can be found in `insomnia_docs` directory. 
+2. As tweaking the elastic search over HTTP API is super easy, to answer all the questions, all the `curl` commands are added in the `README.md` file as well as respective `Insomnia_API_collection` can be found in `insomnia_docs` directory. 
 3. For load testing `locust` a load testing framework is added. All the necessary files can be found in `locustfiles` dir. To run the test, please run `locust -f locustfiles/ElasticServerTest.py` to start the test server. This will start an web interface at [http://0.0.0.0:8089](http://0.0.0.0:8089/) (accepting connections from all network interfaces). 
 
 ### 1. Creating the Index
@@ -140,13 +140,13 @@ Also, we built this so that we can break, and so that we can test,
 
 We are not going to go deep into these, we will just add simple load testing scenarios and discuss with our understanding. 
 
-Constant background processes are taken place while new docs are coming at a tremendous pace, while it requires to calculate the indexing, scoring and other stuffs ( like merging or taking snapshots). All these tasks make elastic search `GET` slower by time. The solutions can be using batch request for coping up round trip cost, also introducing scheduler with multiple worker process for insertions. Further more, auto-generation of ids can be make it faster. Also, filesystem cache can be used for caching intermediate results and process the requests further more for future usage. 
+Constant background processes are taken place while new docs are coming at a tremendous pace, while it requires to calculate the indexing, scoring and other stuffs ( like merging or taking snapshots). All these tasks make elastic search `GET` slower by time. The solutions can be using batch request for coping up round trip cost, also introducing scheduler with multiple worker process for insertions. Furthermore, auto-generation of ids can be make it faster. Also, filesystem cache can be used for caching intermediate results and process the requests further more for future usage. 
 
 ### **10 RPS INSERT & 100 RPS GET Scenario**
 
 ---
 
-1. In this scenario almost 100 request were sent to GET endpoints randomly generated and 10 request were sent as a bulk insert per second in the single machine. 
+1. In this scenario almost 100 requests were sent to GET endpoints randomly generated and 10 requests were sent as a bulk insert per second in the single machine. 
 2. Around 5 min for this test result around 3275 request to `-bulk` API and around 19K requests were sent to `/<index_name>/_doc/<doc_id>` for retrieval. 
 
 ### Report on Load Testing
@@ -154,3 +154,4 @@ Constant background processes are taken place while new docs are coming at a tre
 |----------|-------|-------------|-------|---------|------------|---------|-------------------|
 | 36687    | 11    | 1379        | 2500  | 3918    | 1400       | 1       | 0.1               |
 
+NB. This project prepared within a quick notice of 24 hours. 
