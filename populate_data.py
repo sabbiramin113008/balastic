@@ -38,9 +38,9 @@ def bulk_generate(n=20):
         status = random.choice(status_choice)
         researchText = str(faker.text()).strip().replace('\\n', '')
 
-        print(researchId, author, publishDate, status, researchText)
+        # print(researchId, author, publishDate, status, researchText)
         model = dict()
-        model['researchId'] = i
+        model['researchId'] = researchId
         model['author'] = author
         model['publishDate'] = publishDate.strftime('%Y-%m-%d')
         model['status'] = status
@@ -48,6 +48,11 @@ def bulk_generate(n=20):
         models.append(model)
     res = dict()
     res['models'] = models
+    return res
+
+
+def dump_data(n=20):
+    res = bulk_generate(n)
     with codecs.open(source_json_file, 'w', 'utf-8') as f:
         json.dump(res, f, ensure_ascii=False, indent=1)
 
@@ -74,6 +79,6 @@ def prep_request_file_for_curl(source_file_name=source_json_file):
 
 if __name__ == '__main__':
     # Dump and Generate JSON Dummy File
-    bulk_generate()
+    dump_data()
     # Prepare bulk insertion request file for _bulk insert
     prep_request_file_for_curl()

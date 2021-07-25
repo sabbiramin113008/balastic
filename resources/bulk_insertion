@@ -1,6 +1,0 @@
-{ "index" : { "_index" : "my-index-001", "_id" : "1" } }\n
-{"name": "John Doe Junior Dunior","age": 34,"user_id": 1}
-{ "index" : { "_index" : "my-index-001", "_id" : "2" } }\n
-{"name": "Rafael Dos Anjos","age": 34,"user_id": 2}
-{"update":{"_id":"1", "_index":"my-index-001"}}\n
-{"doc":{"age":23}}
